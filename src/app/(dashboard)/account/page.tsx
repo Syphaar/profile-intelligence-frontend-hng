@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DashboardLayout from "../layout";
-import LogoutButton from "../../components/LogoutButton";
-import { api } from "@/lib/api";
+// import DashboardLayout from "../layout";
+// import LogoutButton from "../../components/LogoutButton";
 
 interface User {
   id: string;
@@ -26,16 +25,25 @@ export default function AccountPage() {
       setError("");
 
       try {
-        const res = await api("/auth/me");
+        // Use /api/user/me endpoint as requested
+        // This goes through Next.js rewrite to backend
+        const res = await fetch("/api/user/me", {
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-        if (res?.error) {
-          setError(res.error);
+        const data = await res.json();
+
+        if (!res.ok || data?.error) {
+          setError(data?.error || data?.message || "Failed to fetch user");
           setLoading(false);
           return;
         }
 
         // Handle both response formats
-        const userData = res?.data || res;
+        const userData = data?.data || data;
         setUser(userData);
       } catch (err) {
         console.error("Auth fetch error:", err);
@@ -50,35 +58,35 @@ export default function AccountPage() {
 
   if (loading) {
     return (
-      <DashboardLayout>
+      // <DashboardLayout>
         <div className="p-6">Loading account...</div>
-      </DashboardLayout>
+      // </DashboardLayout>
     );
   }
 
   if (error) {
     return (
-      <DashboardLayout>
+      // <DashboardLayout>
         <div className="p-6 text-red-500">Error: {error}</div>
-      </DashboardLayout>
+      // </DashboardLayout>
     );
   }
 
   if (!user) {
     return (
-      <DashboardLayout>
+      // <DashboardLayout>
         <div className="p-6">No user data found</div>
-      </DashboardLayout>
+      // </DashboardLayout>
     );
   }
 
   return (
-    <DashboardLayout>
+    // <DashboardLayout>
       <div className="p-6 space-y-6">
         {/* HEADER */}
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Account Settings</h1>
-          <LogoutButton />
+          {/* <LogoutButton /> */}
         </div>
 
         {/* PROFILE CARD */}
@@ -86,11 +94,6 @@ export default function AccountPage() {
           {/* AVATAR SECTION */}
           {user.avatar_url && (
             <div className="p-6 border-b flex items-center gap-4">
-              {/* <img
-                src={user.avatar_url}
-                alt={user.username}
-                className="w-16 h-16 rounded-full border-2 border-gray-200"
-              /> */}
               <div>
                 <h2 className="text-xl font-semibold">{user.username}</h2>
                 <p className="text-sm text-gray-500">@{user.username}</p>
@@ -257,6 +260,7 @@ export default function AccountPage() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    // </DashboardLayout>
   );
 }
+

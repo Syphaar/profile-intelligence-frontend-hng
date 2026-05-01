@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import DashboardLayout from "../layout";
+// import DashboardLayout from "../layout";
 import { api } from "@/lib/api";
 import type { Profile } from "@/app/types";
 
@@ -63,7 +63,7 @@ export default function SearchPage() {
   };
 
   return (
-    <DashboardLayout>
+    // <DashboardLayout>
       <div className="p-6 space-y-6">
         {/* HEADER */}
         <div className="flex justify-between items-center">
@@ -181,19 +181,47 @@ export default function SearchPage() {
                 </button>
 
                 <div className="flex gap-2">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                    <button
-                      key={p}
-                      onClick={() => handlePageChange(p)}
-                      className={`px-3 py-2 rounded transition-colors ${
-                        p === page
-                          ? "bg-blue-600 text-white"
-                          : "bg-white border hover:bg-gray-50"
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  ))}
+                  {(() => {
+                    const pagesToShow = new Set<number>();
+                    // Always show first page
+                    pagesToShow.add(1);
+                    // Show pages around current page (±2)
+                    for (let i = Math.max(1, page - 2); i <= Math.min(totalPages, page + 2); i++) {
+                      pagesToShow.add(i);
+                    }
+                    // Always show last page
+                    if (totalPages > 1) {
+                      pagesToShow.add(totalPages);
+                    }
+
+                    const sorted = Array.from(pagesToShow).sort((a, b) => a - b);
+                    const result: (number | string)[] = [];
+                    for (let i = 0; i < sorted.length; i++) {
+                      if (i > 0 && sorted[i] - sorted[i - 1] > 1) {
+                        result.push('...');
+                      }
+                      result.push(sorted[i]);
+                    }
+
+                    return result.map((item, idx) => {
+                      if (item === '...') {
+                        return <span key={`ellipsis-${idx}`} className="px-2 py-1 text-gray-500">...</span>;
+                      }
+                      return (
+                        <button
+                          key={item}
+                          onClick={() => handlePageChange(item as number)}
+                          className={`px-3 py-2 rounded transition-colors ${
+                            item === page
+                              ? "bg-blue-600 text-white"
+                              : "bg-white border hover:bg-gray-50"
+                          }`}
+                        >
+                          {item}
+                        </button>
+                      );
+                    });
+                  })()}
                 </div>
 
                 <button
@@ -213,6 +241,6 @@ export default function SearchPage() {
           </>
         )}
       </div>
-    </DashboardLayout>
+    // </DashboardLayout>
   );
 }

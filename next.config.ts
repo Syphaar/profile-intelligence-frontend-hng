@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
         source: "/api/v1/:path*",
         destination: "http://localhost:5000/api/v1/:path*",
       },
+      // User endpoint (with /api prefix but no /v1)
+      {
+        source: "/api/user/:path*",
+        destination: "http://localhost:5000/api/user/:path*",
+      },
     ];
   },
 };
