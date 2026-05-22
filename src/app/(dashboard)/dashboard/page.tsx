@@ -9,10 +9,8 @@ export default function DashboardPage() {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
   const role = useAuthRole();
 
   useEffect(() => {
@@ -57,10 +55,7 @@ export default function DashboardPage() {
     return <div className="p-6 text-red-500">{error}</div>;
   }
 
-  // =========================
   // METRICS (CURRENT PAGE)
-  // =========================
-
   const profilesOnPage = profiles.length;
 
   const activeUsersOnPage = profiles.filter(
@@ -76,7 +71,6 @@ export default function DashboardPage() {
 
   return (
     <div className="p-6 space-y-6">
-
       {/* HEADER */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">
@@ -91,7 +85,6 @@ export default function DashboardPage() {
 
       {/* METRICS */}
       <div className="grid md:grid-cols-3 gap-4">
-
         <div className="p-4 bg-white rounded shadow">
           <div className="text-sm text-gray-500">
             Profiles on Page
@@ -132,31 +125,11 @@ export default function DashboardPage() {
       </div>
 
       {/* PROFILE LIST */}
-      {/* <div className="bg-white p-4 rounded shadow">
-        <h2 className="font-bold mb-3">Profiles</h2>
-
-        {profiles.map((profile) => (
-          <div
-            key={profile.id}
-            className="border-b py-2 flex justify-between text-sm"
-          >
-            <span>{profile.name}</span>
-            <span className="text-gray-500">
-              {profile.country_name}
-            </span>
-          </div>
-        ))}
-      </div> */}
-
-
       <div className="bg-white p-4 rounded shadow">
         <h2 className="font-bold mb-3">Profiles</h2>
 
         {profiles.map((profile) => (
-          <div
-            key={profile.id}
-            className="border-b py-4 text-sm space-y-2"
-          >
+          <div key={profile.id} className="border-b py-4 text-sm space-y-2">
             {/* PROFILE NAME HEADER */}
             <div className="font-semibold text-base">
               {profile.name || "Unnamed Profile"}
@@ -164,7 +137,6 @@ export default function DashboardPage() {
 
             {/* FULL PROFILE DETAILS (EXCLUDING ID) */}
             <div className="grid md:grid-cols-2 gap-2 text-gray-700">
-
               {Object.entries(profile)
                 .filter(([key]) => key !== "id")
                 .map(([key, value]) => (
@@ -187,10 +159,7 @@ export default function DashboardPage() {
 
       {/* PAGINATION */}
       <div className="flex gap-2 items-center">
-
-        <button
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((prev) => prev - 1)}
+        <button disabled={currentPage === 1} onClick={() => setCurrentPage((prev) => prev - 1)}
           className="px-3 py-1 border rounded disabled:opacity-50"
         >
           Previous
@@ -200,16 +169,12 @@ export default function DashboardPage() {
           Page {currentPage} of {totalPages}
         </div>
 
-        <button
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((prev) => prev + 1)}
+        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage((prev) => prev + 1)}
           className="px-3 py-1 border rounded disabled:opacity-50"
         >
           Next
         </button>
-
       </div>
-
     </div>
   );
 }

@@ -8,7 +8,6 @@ import type { Profile } from "@/app/types";
 export default function ProfileDetailPage() {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
-
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -96,15 +95,12 @@ export default function ProfileDetailPage() {
   );
 }
 
-/**
- * Safely formats any type of value for display
- */
+// Safely formats any type of value for display
 function formatValue(value: unknown): string {
   if (value === null || value === undefined) return "N/A";
 
   if (typeof value === "object") {
     return JSON.stringify(value, null, 2);
   }
-
   return String(value);
 }
